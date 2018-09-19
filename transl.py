@@ -19,30 +19,41 @@ def translation():
 
 root = Tk()
 root.title('Translation App')
+root.minsize(width=370, height=250)
 
-mainframe = ttk.Frame(root, padding="3 3 12 12")  #TODO: Assign minimum size
+#Background frame configuration
+mainframe = ttk.Frame(root, padding="12 12 12 12")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
-lang_label = ttk.Label(mainframe, text='Destination language').grid(column=2, row=1, sticky="NW")
+#Destination language label
+lang_label = ttk.Label(mainframe, text='Destination language').grid(column=3, row=1, sticky="NW")
 
 #Combobox for language selection
 langvar = StringVar()
 langvar.set('Select language')
 language = ttk.Combobox(mainframe, textvariable=langvar, state='readonly',
-                        values=['Spanish', 'German']).grid(column=2, row=1, sticky='SE')  #TODO: Populate the values list using constants.py
+                        values=['Spanish', 'German']).grid(column=3, row=1, sticky='SE')  #TODO: Populate the values list using constants.py
 
-t = Text(mainframe, width=20, height=5)  #TODO: Add a scroll bar to the text box
-t.grid(column=1, row=1, rowspan=2, sticky='NE')
+#User input enabled text box with scrollbar
+t = Text(mainframe, width=20, height=5, wrap='word')
+t.grid(column=1, row=1, rowspan=2, sticky='NW')
 
-ttk.Button(mainframe, text='Translate', command=translation).grid(column=2, row=2) #Don't pass arg to command here
+scroll = ttk.Scrollbar(mainframe, orient=VERTICAL, command=t.yview)
+scroll.grid(column=2, row=1, rowspan=2, sticky='NSE')
+t.configure(yscrollcommand=scroll.set)
 
-lf = ttk.LabelFrame(mainframe, text='Translation', height=100, width=300, padding=50)  #TODO: Expand the size of the Translation box
-lf.grid(column=1, columnspan=2, row=3)
-lf.columnconfigure(0, weight=1)
+#Activation button
+ttk.Button(mainframe, text='Translate', command=translation).grid(column=3, row=2) #Don't pass arg to command here
+
+#Labelframe containing the translation result widget
+lf = ttk.LabelFrame(mainframe, text='Translation', padding=50)  #TODO: Expand the size of the Translation box
+lf.grid(column=1, columnspan=3, row=3)
+lf.columnconfigure(0, weight=1, minsize=250)
 lf.rowconfigure(0, weight=1)
 
+#Label for the translation result
 resultContent = StringVar()
 end_result = ttk.Label(master=lf, textvariable=resultContent).grid(column=0, row=0)  #TODO: Test character limit, keep centered
 
